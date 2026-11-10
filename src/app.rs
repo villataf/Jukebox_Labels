@@ -400,10 +400,14 @@ impl JukeApp {
                     ui.label(RichText::new(AUTHOR).font(small).color(th().weak));
                 });
                 ui.with_layout(Layout::right_to_left(Align::Center), |ui| {
+                    // un pulsante con menu, fatto come gli altri pulsanti della riga, così resta allineato
                     let mut lang = self.settings.lang;
-                    egui::ComboBox::from_id_salt("lang").selected_text(lang.native_name()).width(110.0).show_ui(ui, |ui| {
+                    ui.menu_button(format!("{}  ▼", lang.native_name()), |ui| {
                         for l in Lang::ALL {
-                            ui.selectable_value(&mut lang, l, l.native_name());
+                            if ui.selectable_label(l == lang, l.native_name()).clicked() {
+                                lang = l;
+                                ui.close_menu();
+                            }
                         }
                     });
                     if lang != self.settings.lang {
