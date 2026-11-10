@@ -1,9 +1,9 @@
 [package]
 name = "jukebox-etichette"
 version = "0.5.3"
-edition = "2021"
+edition = "2026"
 description = "Crea etichette (title strip) 78 x 25 mm per jukebox in stile anni 70-80-90, esportate in PDF"
-license = "MIT"
+license = "GPL-3.0-or-later"
 
 build = "build.rs"
 
