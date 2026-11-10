@@ -1,45 +1,81 @@
-# Compila il programma per Windows, macOS e Linux, sia Intel (x86_64) sia ARM (aarch64).
-name: build
+name: Build and Release
 
 on:
   push:
-  workflow_dispatch:
+    tags:
+      - 'v*' # Si attiva automaticamente quando crei un tag es. v1.0.0
 
 jobs:
   build:
+    name: Build for ${{ matrix.os }} (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+    
     strategy:
       fail-fast: false
       matrix:
         include:
-          - { os: windows-latest, target: x86_64-pc-windows-msvc, ext: ".exe" }
-          - { os: windows-latest, target: aarch64-pc-windows-msvc, ext: ".exe" }
-          - { os: macos-latest, target: aarch64-apple-darwin, ext: "" }
-          - { os: macos-latest, target: x86_64-apple-darwin, ext: "" }
-          - { os: ubuntu-latest, target: x86_64-unknown-linux-gnu, ext: "" }
-          - { os: ubuntu-24.04-arm, target: aarch64-unknown-linux-gnu, ext: "" }
-    runs-on: ${{ matrix.os }}
+          # --- WINDOWS ---
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            bin_name: mia-app.exe
+            archive_name: mia-app-windows-amd64.zip
+          - os: windows-latest
+            target: aarch64-pc-windows-msvc
+            bin_name: mia-app.exe
+            archive_name: mia-app-windows-arm64.zip
+
+          # --- LINUX ---
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            bin_name: mia-app
+            archive_name: mia-app-linux-amd64.tar.gz
+          - os: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            bin_name: mia-app
+            archive_name: mia-app-linux-arm64.tar.gz
+
+          # --- macOS ---
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            bin_name: mia-app
+            archive_name: mia-app-macos-intel.tar.gz
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            bin_name: mia-app
+            archive_name: mia-app-macos-apple-silicon.tar.gz
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - name: Checkout del codice
+        uses: actions/checkout@v4
+
+      - name: Installa Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
         with:
           targets: ${{ matrix.target }}
-      - name: Librerie di sistema (Linux)
-        if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y libxkbcommon-dev libgtk-3-dev libwayland-dev libxcursor-dev libxrandr-dev libxi-dev libgl1-mesa-dev
-      - run: cargo build --release --target ${{ matrix.target }}
-      - name: App per macOS e pacchetto Linux con l'icona
-        if: runner.os != 'Windows'
-        continue-on-error: true
+
+      - name: Compila il progetto (Release)
+        uses: actions-rs/cargo@v1
+        with:
+          use-cross: true
+          command: build
+          args: --release --target ${{ matrix.target }}
+
+      - name: Prepara archivio Windows (ZIP)
+        if: startsWith(matrix.os, 'windows')
+        shell: pwsh
         run: |
-          cargo install cargo-bundle
-          cargo bundle --release --target ${{ matrix.target }}
-      - uses: actions/upload-artifact@v4
-        if: runner.os != 'Windows'
-        continue-on-error: true
+          $bin = "target/${{ matrix.target }}/release/${{ matrix.bin_name }}"
+          Compress-Archive -Path $bin -DestinationPath ${{ matrix.archive_name }}
+
+      - name: Prepara archivio Linux/macOS (TAR.GZ)
+        if: startsWith(matrix.os, 'ubuntu') || startsWith(matrix.os, 'macos')
+        run: |
+          bin="target/${{ matrix.target }}/release/${{ matrix.bin_name }}"
+          tar -czvf ${{ matrix.archive_name }} -C "$(dirname $bin)" "$(basename $bin)"
+
+      - name: Carica l'eseguibile nella Release di GitHub
+        uses: softprops/action-gh-release@v1
         with:
-          name: jukebox-etichette-bundle-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/bundle/
-      - uses: actions/upload-artifact@v4
-        with:
-          name: jukebox-etichette-${{ matrix.target }}
-          path: target/${{ matrix.target }}/release/jukebox-etichette${{ matrix.ext }}
+          files: ${{ matrix.archive_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
