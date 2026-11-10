@@ -1,0 +1,52 @@
+[package]
+name = "jukebox-etichette"
+version = "0.5.2"
+edition = "2021"
+description = "Crea etichette (title strip) 78 x 25 mm per jukebox in stile anni 70-80-90, esportate in PDF"
+license = "MIT"
+
+build = "build.rs"
+
+# per creare l'app di macOS (.app) e il pacchetto Linux (.deb) con `cargo bundle --release`
+[package.metadata.bundle]
+name = "Etichette Jukebox"
+identifier = "app.jukebox.etichette"
+icon = [
+    "assets/icon/icon-16.png",
+    "assets/icon/icon-32.png",
+    "assets/icon/icon-64.png",
+    "assets/icon/icon-128.png",
+    "assets/icon/icon-256.png",
+    "assets/icon/icon-512.png",
+    "assets/icon/icon-1024.png",
+]
+category = "public.app-category.graphics-design"
+short_description = "Etichette 78 x 25 mm per juke-box, in PDF"
+
+[[bin]]
+name = "jukebox-etichette"
+path = "src/main.rs"
+
+[dependencies]
+eframe = { version = "0.31", default-features = false, features = ["default_fonts", "glow", "wayland", "x11", "persistence"] }
+tiny-skia = "0.11"
+ttf-parser = "0.25"
+miniz_oxide = "0.8"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rfd = "0.15"
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "webp", "bmp", "gif"] }
+
+[target.'cfg(windows)'.build-dependencies]
+winresource = "0.1"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+winit = "0.30"
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+strip = true
+
+[profile.dev.package."*"]
+opt-level = 2

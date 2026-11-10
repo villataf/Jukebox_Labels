@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Name=Etichette Jukebox
+Name[en]=Jukebox Labels
+Name[de]=Jukebox-Etiketten
+Name[fr]=Étiquettes Jukebox
+Name[zh]=点唱机标签
+Name[ja]=ジュークボックス・ラベル
+Comment=Etichette 78 x 25 mm per juke-box, in PDF
+Exec=jukebox-etichette
+Icon=jukebox-etichette
+Terminal=false
+Categories=Graphics;Utility;
