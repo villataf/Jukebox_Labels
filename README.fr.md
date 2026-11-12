@@ -1,6 +1,8 @@
 # Étiquettes Jukebox
 
-[Italiano](README.md) · [English](README.en.md) · [Deutsch](README.de.md) · **Français** · [中文](README.zh.md) · [日本語](README.ja.md)
+[Italiano](README.md) · [English](README.en.md) · [Español](README.es.md) · [Deutsch](README.de.md) · **Français** · [中文](README.zh.md) · [日本語](README.ja.md)
+
+Version 0.6.1 · Federico Villata - 2026
 
 Un programme pour créer les bandes-titres des disques d'un juke-box, au format exact de
 **78 × 25 mm**, avec des designs, des couleurs et des polices dans le style des années 70, 80 et 90.
@@ -12,7 +14,8 @@ processeurs Intel et ARM.
 1. Saisissez l'**artiste** et les **titres** dans les champs (face A et, si vous voulez, face B).
 2. Choisissez un **design**, les **couleurs** et la **police** : l'aperçu se met à jour aussitôt.
 3. Ajoutez d'autres étiquettes avec **➕ Nouvelle**, ou collez une liste avec **Importer une liste…**.
-4. Cliquez sur **Exporter en PDF…** et imprimez le fichier à 100 % (« taille réelle »), sans l'ajuster à la page.
+4. Choisissez le **format de la feuille** dans le menu déroulant du panneau **Imprimer en PDF**, en **portrait** ou en **paysage**.
+5. Cliquez sur **Exporter en PDF…** et imprimez le fichier à 100 % (« taille réelle »), sans l'ajuster à la page.
 
 ## Fonctionnalités
 
@@ -31,12 +34,23 @@ processeurs Intel et ARM.
 - Liste d'étiquettes : ajouter, dupliquer, supprimer, réordonner, importer une liste collée.
   Formats : `Artiste - Titre A / Titre B`, `Artiste; Titre A; Titre B` et, avec un artiste par face,
   `Artiste A - Titre A | Artiste B - Titre B` ou `Artiste A; Titre A; Titre B; Artiste B`.
-- PDF sur feuille A4 ou Letter (sur A4, 18 étiquettes par feuille, espacées de 4 mm, avec traits
-  de coupe aux coins) ou une étiquette par page en 78 × 25 mm.
+- Formats de feuille, choisis dans un menu déroulant :
+
+  | Feuille | Dimensions | Étiquettes par feuille, portrait | paysage |
+  |---|---|---|---|
+  | A3 | 297 × 420 mm | 39 | 36 |
+  | A4 | 210 × 297 mm | 18 | 18 |
+  | A5 | 148 × 210 mm | 6 | 8 |
+  | A6 | 105 × 148 mm | 4 | 3 |
+  | Letter | 216 × 279 mm | 18 | 18 |
+  | Une étiquette par page | 78 × 25 mm | 1 | 1 |
+
+  Chaque feuille peut être utilisée en portrait ou en paysage.
+  Sur les feuilles, les étiquettes sont espacées de 4 mm, avec des traits de coupe aux coins.
   L'espace entre les étiquettes, le contour gris et le nombre de copies sont réglables.
 - L'aperçu de la feuille passe d'une page à l'autre quand il y en a plusieurs.
-- Interface gris foncé/noir ou mode jour ; langues : italien, anglais, allemand, français,
-  chinois, japonais.
+- Interface gris foncé/noir ou mode jour ; langues : italien, anglais, espagnol, allemand,
+  français, chinois, japonais.
 - **Nouveau projet** supprime toutes les étiquettes d'un coup (après confirmation).
 - Enregistrez et ouvrez vos projets ; le travail est aussi conservé à la fermeture. Un projet
   garde l'emplacement de l'image, pas l'image elle-même : si le fichier est déplacé, choisissez-le à nouveau.
@@ -59,6 +73,8 @@ Pour les autres plateformes et processeurs (Intel et ARM) :
 correspondant. Le fichier `.github/workflows/build.yml` compile les six versions sur GitHub.
 Sous Linux, il faut les bibliothèques `libgtk-3`, `libxkbcommon` et `libwayland`.
 
+La version affichée en haut à gauche est celle indiquée dans `Cargo.toml`.
+
 ## Icône
 
 L'icône (un disque vinyle derrière une étiquette de juke-box) est dessinée dans `src/icon.rs` ;
@@ -77,7 +93,7 @@ les fichiers sont dans `assets/icon` : `icon.ico` (Windows), `icon.icns` (macOS)
 - `--export-pdf fichier.pdf` crée un PDF avec les étiquettes d'exemple, sans fenêtre.
 - `--gallery fichier.png` enregistre une image avec tous les designs.
 - `--make-icons dossier` régénère les fichiers de l'icône.
-- `--lang it|en|de|fr|zh|ja`, `--day` et `--image photo.jpg` pour essayer au démarrage une langue,
+- `--lang it|en|es|de|fr|zh|ja`, `--day` et `--image photo.jpg` pour essayer au démarrage une langue,
   le mode jour et le design avec photo.
 
 ## Polices

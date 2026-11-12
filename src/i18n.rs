@@ -1,7 +1,8 @@
-//! Le lingue dell'interfaccia: italiano, inglese, tedesco, francese, cinese e giapponese.
+//! Le lingue dell'interfaccia: italiano, inglese, spagnolo, tedesco, francese, cinese e giapponese.
 
 use serde::{Deserialize, Serialize};
 
+/// L'ordine delle varianti è l'indice delle colonne nelle tabelle qui sotto: le nuove lingue vanno in fondo.
 #[derive(Clone, Copy, PartialEq, Eq, Serialize, Deserialize, Default)]
 pub enum Lang {
     #[default]
@@ -11,15 +12,18 @@ pub enum Lang {
     Fr,
     Zh,
     Ja,
+    Es,
 }
 
 impl Lang {
-    pub const ALL: [Lang; 6] = [Lang::It, Lang::En, Lang::De, Lang::Fr, Lang::Zh, Lang::Ja];
+    /// L'ordine del menu.
+    pub const ALL: [Lang; 7] = [Lang::It, Lang::En, Lang::Es, Lang::De, Lang::Fr, Lang::Zh, Lang::Ja];
 
     pub fn native_name(self) -> &'static str {
         match self {
             Lang::It => "Italiano",
             Lang::En => "English",
+            Lang::Es => "Español",
             Lang::De => "Deutsch",
             Lang::Fr => "Français",
             Lang::Zh => "中文",
@@ -28,7 +32,7 @@ impl Lang {
     }
 
     pub fn code(self) -> &'static str {
-        ["it", "en", "de", "fr", "zh", "ja"][self.i()]
+        ["it", "en", "de", "fr", "zh", "ja", "es"][self.i()]
     }
 
     fn i(self) -> usize {
@@ -40,6 +44,7 @@ impl Lang {
         let v = ["LC_ALL", "LC_MESSAGES", "LANG"].iter().find_map(|k| std::env::var(k).ok()).unwrap_or_default();
         match v.get(..2).unwrap_or("") {
             "en" => Lang::En,
+            "es" => Lang::Es,
             "de" => Lang::De,
             "fr" => Lang::Fr,
             "zh" => Lang::Zh,
@@ -103,8 +108,10 @@ pub struct T {
     pub style_applied: &'static str,
     pub print: &'static str,
     pub paper: &'static str,
-    pub paper_a4: &'static str,
-    pub paper_letter: &'static str,
+    /// "{n}" = A3, A4…; "{s}" = misure in mm.
+    pub paper_sheet: &'static str,
+    pub portrait: &'static str,
+    pub landscape: &'static str,
     pub paper_single: &'static str,
     pub crop_marks: &'static str,
     pub cut_lines: &'static str,
@@ -148,8 +155,101 @@ pub fn tr(lang: Lang) -> &'static T {
         Lang::Fr => &FR,
         Lang::Zh => &ZH,
         Lang::Ja => &JA,
+        Lang::Es => &ES,
     }
 }
+
+static ES: T = T {
+    app_title: "ETIQUETAS JUKEBOX",
+    new_project: "Nuevo proyecto",
+    open_project: "Abrir proyecto…",
+    save_project: "Guardar proyecto…",
+    export_pdf: "Exportar PDF…",
+    day: "☀ Día",
+    night: "🌙 Noche",
+    language: "Idioma",
+    labels: "Etiquetas ({n})",
+    add: "➕ Nueva",
+    duplicate: "Duplicar",
+    delete: "Eliminar",
+    move_up: "Subir",
+    move_down: "Bajar",
+    import_list: "Importar lista…",
+    no_artist: "(sin artista)",
+    no_title: "(sin título)",
+    label_n: "Etiqueta n.º {n}",
+    preview: "vista previa ampliada",
+    texts: "Textos",
+    artists: "Artistas",
+    one_artist: "Un artista para las dos caras",
+    two_artists: "Un artista por cara",
+    artist: "Artista",
+    artist_hint: "Nombre del artista o del grupo",
+    title_a: "Título cara A",
+    title_a_hint: "Título de la canción",
+    title_b: "Título cara B",
+    title_b_hint: "Opcional: la otra cara del disco",
+    artist_a: "Artista cara A",
+    artist_a_hint: "Quién canta la cara A",
+    artist_b: "Artista cara B",
+    artist_b_hint: "Quién canta la cara B",
+    slogan: "Texto central",
+    slogan_hint: "Opcional: p. ej. un festival o una velada",
+    uppercase: "Escribir todo en MAYÚSCULAS",
+    image: "Imagen",
+    choose_image: "Elegir imagen…",
+    remove_image: "Quitar imagen",
+    image_hint: "Aparece en el recuadro cuadrado del diseño «Foto cuadrada».",
+    no_image: "Ninguna imagen elegida",
+    images_filter: "Imágenes",
+    design: "Diseño",
+    use_suggested: "Al cambiar de diseño, usar sus colores y su fuente a juego",
+    colors: "Colores",
+    font: "Fuente",
+    font_titles: "Fuente de los títulos:",
+    same_font: "Igual que la de los artistas",
+    font_cards_hint: "Las tarjetas de abajo eligen la fuente de los artistas.",
+    apply_all: "Aplicar diseño, colores, fuente e imagen a todas las etiquetas",
+    style_applied: "Estilo aplicado a todas las etiquetas.",
+    print: "Imprimir PDF",
+    paper: "Tamaño del papel",
+    paper_sheet: "Hoja {n} ({s} mm)",
+    portrait: "Vertical",
+    landscape: "Horizontal",
+    paper_single: "Una etiqueta por página (78 × 25 mm)",
+    crop_marks: "Marcas de corte en las esquinas",
+    cut_lines: "Contorno gris fino",
+    gap: "Espacio entre etiquetas",
+    gap_hint: "Con menos de 2,5 mm de espacio, las marcas quedan solo en el borde de la hoja.",
+    copies: "Copias de cada etiqueta",
+    per_sheet: "{c} × {r} = {n} etiquetas por hoja",
+    totals: "Etiquetas: {n} · Páginas: {p}",
+    print_hint: "Medida exacta: 78 × 25 mm. Imprimir al 100 % («tamaño real»), sin ajustar a la página.",
+    sheet: "Hoja",
+    page_of: "Página {i} de {n}",
+    prev_page: "Página anterior",
+    next_page: "Página siguiente",
+    import_title: "Importar lista",
+    import_one_per_line: "Una canción por línea. Ejemplos:",
+    import_two: "Con un artista por cara:",
+    import_style: "Las nuevas etiquetas usan el estilo de la seleccionada.",
+    import_add: "Añadir a la lista",
+    imported: "{n} etiquetas importadas.",
+    new_question: "¿Eliminar todas las etiquetas y empezar un proyecto nuevo?",
+    new_confirm: "Sí, eliminar todo",
+    cancel: "Cancelar",
+    new_done: "Nuevo proyecto: se han eliminado todas las etiquetas.",
+    welcome: "Escribe el artista y los títulos, elige diseño, colores y fuente y exporta el PDF.",
+    pdf_saved: "PDF guardado: {p}",
+    pdf_error: "No se puede guardar el PDF: {e}",
+    project_saved: "Proyecto guardado: {p}",
+    save_error: "No se puede guardar: {e}",
+    opened: "Abierto: {p}",
+    no_labels_in_file: "El archivo no contiene etiquetas.",
+    open_error: "No se puede abrir el archivo: {e}",
+    label_added: "Nueva etiqueta añadida.",
+    project_filter: "Proyecto de etiquetas",
+};
 
 static IT: T = T {
     app_title: "ETICHETTE JUKEBOX",
@@ -205,8 +305,9 @@ static IT: T = T {
     style_applied: "Stile applicato a tutte le etichette.",
     print: "Stampa PDF",
     paper: "Formato del foglio",
-    paper_a4: "Foglio A4 (210 × 297 mm)",
-    paper_letter: "Foglio Letter (216 × 279 mm)",
+    paper_sheet: "Foglio {n} ({s} mm)",
+    portrait: "Verticale",
+    landscape: "Orizzontale",
     paper_single: "Una etichetta per pagina (78 × 25 mm)",
     crop_marks: "Indicatori di ritaglio agli angoli",
     cut_lines: "Contorno grigio sottile",
@@ -296,8 +397,9 @@ static EN: T = T {
     style_applied: "Style applied to all labels.",
     print: "Print PDF",
     paper: "Paper size",
-    paper_a4: "A4 sheet (210 × 297 mm)",
-    paper_letter: "Letter sheet (216 × 279 mm)",
+    paper_sheet: "{n} sheet ({s} mm)",
+    portrait: "Portrait",
+    landscape: "Landscape",
     paper_single: "One label per page (78 × 25 mm)",
     crop_marks: "Crop marks at the corners",
     cut_lines: "Thin grey outline",
@@ -387,8 +489,9 @@ static DE: T = T {
     style_applied: "Stil auf alle Etiketten angewendet.",
     print: "PDF drucken",
     paper: "Papierformat",
-    paper_a4: "A4-Blatt (210 × 297 mm)",
-    paper_letter: "Letter-Blatt (216 × 279 mm)",
+    paper_sheet: "{n}-Blatt ({s} mm)",
+    portrait: "Hochformat",
+    landscape: "Querformat",
     paper_single: "Ein Etikett pro Seite (78 × 25 mm)",
     crop_marks: "Schnittmarken an den Ecken",
     cut_lines: "Dünner grauer Rand",
@@ -478,8 +581,9 @@ static FR: T = T {
     style_applied: "Style appliqué à toutes les étiquettes.",
     print: "Imprimer en PDF",
     paper: "Format de la feuille",
-    paper_a4: "Feuille A4 (210 × 297 mm)",
-    paper_letter: "Feuille Letter (216 × 279 mm)",
+    paper_sheet: "Feuille {n} ({s} mm)",
+    portrait: "Portrait",
+    landscape: "Paysage",
     paper_single: "Une étiquette par page (78 × 25 mm)",
     crop_marks: "Traits de coupe aux coins",
     cut_lines: "Fin contour gris",
@@ -569,8 +673,9 @@ static ZH: T = T {
     style_applied: "样式已应用到所有标签。",
     print: "打印 PDF",
     paper: "纸张尺寸",
-    paper_a4: "A4 纸（210 × 297 毫米）",
-    paper_letter: "Letter 纸（216 × 279 毫米）",
+    paper_sheet: "{n} 纸（{s} 毫米）",
+    portrait: "纵向",
+    landscape: "横向",
     paper_single: "每页一张标签（78 × 25 毫米）",
     crop_marks: "四角裁切标记",
     cut_lines: "细灰色边框",
@@ -660,8 +765,9 @@ static JA: T = T {
     style_applied: "スタイルをすべてのラベルに適用しました。",
     print: "PDF を印刷",
     paper: "用紙サイズ",
-    paper_a4: "A4 用紙（210 × 297 mm）",
-    paper_letter: "レター用紙（216 × 279 mm）",
+    paper_sheet: "{n} 用紙（{s} mm）",
+    portrait: "縦向き",
+    landscape: "横向き",
     paper_single: "1 ページに 1 枚（78 × 25 mm）",
     crop_marks: "四隅のトンボ（裁断マーク）",
     cut_lines: "細いグレーの枠線",
@@ -697,7 +803,17 @@ static JA: T = T {
     project_filter: "ラベルプロジェクト",
 };
 
+// Le tabelle qui sotto hanno una colonna per It, En, De, Fr, Zh, Ja; lo spagnolo ha le sue (in fondo).
+
 pub fn era(lang: Lang, era: &str) -> &'static str {
+    if lang == Lang::Es {
+        return match era {
+            "Anni 70" => "Años 70",
+            "Anni 80" => "Años 80",
+            "Anni 90" => "Años 90",
+            _ => "Clásico",
+        };
+    }
     let row: [&'static str; 6] = match era {
         "Anni 70" => ["Anni 70", "70s", "70er", "Années 70", "70年代", "70年代"],
         "Anni 80" => ["Anni 80", "80s", "80er", "Années 80", "80年代", "80年代"],
@@ -708,6 +824,9 @@ pub fn era(lang: Lang, era: &str) -> &'static str {
 }
 
 pub fn design_name(lang: Lang, id: &str, fallback: &'static str) -> &'static str {
+    if lang == Lang::Es {
+        return es_design(id).unwrap_or(fallback);
+    }
     let row: [&'static str; 6] = match id {
         "classico" => ["Juke-box Classico", "Classic Jukebox", "Klassische Jukebox", "Juke-box classique", "经典点唱机", "クラシック・ジュークボックス"],
         "foto" => ["Foto Quadrata", "Square Photo", "Quadratisches Foto", "Photo carrée", "方形照片", "スクエア写真"],
@@ -739,6 +858,9 @@ pub fn design_name(lang: Lang, id: &str, fallback: &'static str) -> &'static str
 }
 
 pub fn palette_name(lang: Lang, id: &str, fallback: &'static str) -> &'static str {
+    if lang == Lang::Es {
+        return es_palette(id).unwrap_or(fallback);
+    }
     let row: [&'static str; 6] = match id {
         "crema" => ["Crema e Rosso", "Cream & Red", "Creme & Rot", "Crème et rouge", "奶油红", "クリーム＆レッド"],
         "tramonto" => ["Tramonto", "Sunset", "Sonnenuntergang", "Coucher de soleil", "日落", "サンセット"],
@@ -766,4 +888,63 @@ pub fn palette_name(lang: Lang, id: &str, fallback: &'static str) -> &'static st
         _ => return fallback,
     };
     row[lang.i()]
+}
+
+fn es_design(id: &str) -> Option<&'static str> {
+    Some(match id {
+        "classico" => "Jukebox clásico",
+        "foto" => "Foto cuadrada",
+        "raggi" => "Rayos de sol",
+        "tramonto" => "Rayas de atardecer",
+        "groovy" => "Onda groovy",
+        "arcobaleno" => "Arcoíris diagonal",
+        "disco" => "Disco volador",
+        "arlecchino" => "Arlequín",
+        "doppio" => "Dos colores",
+        "vela" => "Vela de verano",
+        "ruota" => "Rueda de la fortuna",
+        "biglietto" => "Billete perforado",
+        "pannello" => "Panel jukebox",
+        "festival" => "Festival de estrellas",
+        "ska" => "Cuadros ska",
+        "lampo" => "Rayo pop",
+        "neon" => "Rejilla neón",
+        "memphis" => "Confeti Memphis",
+        "cromo" => "Cromo brillante",
+        "arcade" => "Arcade 8 bits",
+        "rave" => "Zigzag rave",
+        "grunge" => "Cinta grunge",
+        "vapor" => "Cuadros vapor",
+        "sport" => "Cortavientos",
+        _ => return None,
+    })
+}
+
+fn es_palette(id: &str) -> Option<&'static str> {
+    Some(match id {
+        "crema" => "Crema y rojo",
+        "tramonto" => "Atardecer",
+        "avocado" => "Aguacate y mostaza",
+        "disco" => "Disco dorado",
+        "cioccolato" => "Chocolate y oro",
+        "arancio" => "Naranja y azul",
+        "miami" => "Noche de Miami",
+        "synth" => "Synthwave",
+        "memphis" => "Memphis",
+        "limone" => "Limón flúor",
+        "verdearancio" => "Verde y naranja",
+        "lime" => "Lima intensa",
+        "fucsia" => "Fucsia pop",
+        "ciano" => "Cian de verano",
+        "confetto" => "Rosa caramelo",
+        "festival" => "Amarillo y azul",
+        "notte" => "Noche flúor",
+        "ska" => "Blanco y negro ska",
+        "sport" => "Cortavientos",
+        "vapor" => "Vaporwave",
+        "grunge" => "Grunge",
+        "rave" => "Rave ácido",
+        "gameboy" => "Consola verde",
+        _ => return None,
+    })
 }

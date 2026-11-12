@@ -108,6 +108,37 @@ pub enum Paper {
     Letter,
     /// Una pagina grande come l'etichetta (78 × 25 mm).
     Single,
+    A3,
+    A5,
+    A6,
+}
+
+impl Paper {
+    /// I formati nell'ordine del menu.
+    pub const MENU: [Paper; 6] = [Paper::A3, Paper::A4, Paper::A5, Paper::A6, Paper::Letter, Paper::Single];
+
+    /// Larghezza e altezza del foglio in mm (per Single: l'etichetta).
+    pub fn size_mm(self) -> (f32, f32) {
+        match self {
+            Paper::A3 => (297.0, 420.0),
+            Paper::A4 => (210.0, 297.0),
+            Paper::A5 => (148.0, 210.0),
+            Paper::A6 => (105.0, 148.0),
+            Paper::Letter => (215.9, 279.4),
+            Paper::Single => (LABEL_W, LABEL_H),
+        }
+    }
+
+    pub fn short_name(self) -> &'static str {
+        match self {
+            Paper::A3 => "A3",
+            Paper::A4 => "A4",
+            Paper::A5 => "A5",
+            Paper::A6 => "A6",
+            Paper::Letter => "Letter",
+            Paper::Single => "",
+        }
+    }
 }
 
 
@@ -121,11 +152,13 @@ pub struct Sheet {
     pub cut_lines: bool,
     pub gap_mm: f32,
     pub copies: u32,
+    /// Foglio in orizzontale (false = verticale).
+    pub landscape: bool,
 }
 
 impl Default for Sheet {
     fn default() -> Self {
-        Sheet { paper: Paper::A4, crop_marks: true, cut_lines: false, gap_mm: 4.0, copies: 1 }
+        Sheet { paper: Paper::A4, crop_marks: true, cut_lines: false, gap_mm: 4.0, copies: 1, landscape: false }
     }
 }
 

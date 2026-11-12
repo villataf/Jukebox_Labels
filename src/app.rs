@@ -507,12 +507,21 @@ impl JukeApp {
                 ui.heading(t.print);
                 ui.label(RichText::new(t.paper).strong());
                 let sheet = &mut self.project.sheet;
-                for (p, name) in [(Paper::A4, t.paper_a4), (Paper::Letter, t.paper_letter), (Paper::Single, t.paper_single)] {
-                    ui.radio_value(&mut sheet.paper, p, name);
-                }
+                egui::ComboBox::from_id_salt("paper")
+                    .selected_text(paper_name(t, sheet.paper))
+                    .width(ui.available_width())
+                    .show_ui(ui, |ui| {
+                        for p in Paper::MENU {
+                            ui.selectable_value(&mut sheet.paper, p, paper_name(t, p));
+                        }
+                    });
                 ui.add_space(4.0);
                 let multi = sheet.paper != Paper::Single;
                 ui.add_enabled_ui(multi, |ui| {
+                    ui.horizontal(|ui| {
+                        ui.radio_value(&mut sheet.landscape, false, t.portrait);
+                        ui.radio_value(&mut sheet.landscape, true, t.landscape);
+                    });
                     ui.checkbox(&mut sheet.crop_marks, t.crop_marks);
                     ui.checkbox(&mut sheet.cut_lines, t.cut_lines);
                     ui.horizontal(|ui| {
@@ -916,6 +925,15 @@ fn elide(s: &str, max: usize) -> String {
     } else {
         format!("{}…", s.chars().take(max - 1).collect::<String>())
     }
+}
+
+/// Il nome del formato nel menu, ad esempio "Foglio A5 (148 × 210 mm)".
+fn paper_name(t: &T, p: Paper) -> String {
+    if p == Paper::Single {
+        return t.paper_single.to_string();
+    }
+    let (w, h) = p.size_mm();
+    t.paper_sheet.replace("{n}", p.short_name()).replace("{s}", &format!("{} × {}", w.round(), h.round()))
 }
 
 /// Accorcia il testo con "…" finché non sta nella larghezza data (vale anche per cinese e giapponese).

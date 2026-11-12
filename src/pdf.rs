@@ -29,13 +29,11 @@ impl Layout {
 
 pub fn layout(sheet: &Sheet) -> Layout {
     let gap = sheet.gap_mm.clamp(0.0, 20.0);
-    let (pw, ph) = match sheet.paper {
-        Paper::A4 => (210.0, 297.0),
-        Paper::Letter => (215.9, 279.4),
-        Paper::Single => {
-            return Layout { page_w: LABEL_W, page_h: LABEL_H, cols: 1, rows: 1, x0: 0.0, y0: 0.0, gap: 0.0 }
-        }
-    };
+    if sheet.paper == Paper::Single {
+        return Layout { page_w: LABEL_W, page_h: LABEL_H, cols: 1, rows: 1, x0: 0.0, y0: 0.0, gap: 0.0 };
+    }
+    let (w, h) = sheet.paper.size_mm();
+    let (pw, ph) = if sheet.landscape { (h, w) } else { (w, h) };
     let cols = (((pw - 2.0 * MARGIN + gap) / (LABEL_W + gap)).floor() as usize).max(1);
     let rows = (((ph - 2.0 * MARGIN + gap) / (LABEL_H + gap)).floor() as usize).max(1);
     let gw = cols as f32 * LABEL_W + (cols - 1) as f32 * gap;
@@ -287,3 +285,38 @@ pub fn build_pdf(scenes: &[Scene], sheet: &Sheet) -> Vec<u8> {
     pdf
 }
 
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn labels_per_sheet() {
+        let per = |paper| layout(&Sheet { paper, ..Sheet::default() }).per_page();
+        assert_eq!(per(Paper::A3), 39);
+        assert_eq!(per(Paper::A4), 18);
+        assert_eq!(per(Paper::A5), 6);
+        assert_eq!(per(Paper::A6), 4);
+        assert_eq!(per(Paper::Single), 1);
+        let land = |paper| layout(&Sheet { paper, landscape: true, ..Sheet::default() }).per_page();
+        assert_eq!(land(Paper::A3), 36);
+        assert_eq!(land(Paper::A4), 18);
+        assert_eq!(land(Paper::A5), 8);
+        assert_eq!(land(Paper::A6), 3);
+        assert_eq!(land(Paper::Letter), 18);
+        assert_eq!(land(Paper::Single), 1);
+        let l = layout(&Sheet { paper: Paper::A4, landscape: true, ..Sheet::default() });
+        assert_eq!((l.page_w, l.page_h, l.cols, l.rows), (297.0, 210.0, 3, 6));
+        // le etichette e i segni di taglio stanno dentro il foglio
+        // (una etichetta per pagina non ha segni di taglio)
+        for p in Paper::MENU.into_iter().filter(|&p| p != Paper::Single) {
+            let l = layout(&Sheet { paper: p, ..Sheet::default() });
+            let n = l.per_page();
+            for (x1, y1, x2, y2) in crop_marks(&l, n) {
+                for (x, y) in [(x1, y1), (x2, y2)] {
+                    assert!(x >= 0.0 && x <= l.page_w && y >= 0.0 && y <= l.page_h, "{:?}", p.short_name());
+                }
+            }
+        }
+    }
+}

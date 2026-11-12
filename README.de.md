@@ -1,6 +1,8 @@
 # Jukebox-Etiketten
 
-[Italiano](README.md) · [English](README.en.md) · **Deutsch** · [Français](README.fr.md) · [中文](README.zh.md) · [日本語](README.ja.md)
+[Italiano](README.md) · [English](README.en.md) · [Español](README.es.md) · **Deutsch** · [Français](README.fr.md) · [中文](README.zh.md) · [日本語](README.ja.md)
+
+Version 0.6.1 · Federico Villata - 2026
 
 Ein Programm für die Titelstreifen der Platten einer Jukebox, in genau **78 × 25 mm**, mit
 Designs, Farben und Schriften im Stil der 70er, 80er und 90er Jahre. Es exportiert ein
@@ -11,7 +13,8 @@ druckfertiges Vektor-PDF. Es läuft unter Windows, macOS und Linux, auf Intel- u
 1. **Interpret** und **Titel** in die Felder schreiben (Seite A und, wenn gewünscht, Seite B).
 2. Ein **Design**, die **Farben** und die **Schrift** wählen: die Vorschau ändert sich sofort.
 3. Weitere Etiketten mit **➕ Neu** anlegen oder eine Liste mit **Liste importieren…** einfügen.
-4. **PDF exportieren…** drücken und die Datei mit 100 % („Originalgröße“) drucken, ohne sie an die Seite anzupassen.
+4. Das **Papierformat** im Ausklappmenü des Bereichs **PDF drucken** wählen, im **Hochformat** oder **Querformat**.
+5. **PDF exportieren…** drücken und die Datei mit 100 % („Originalgröße“) drucken, ohne sie an die Seite anzupassen.
 
 ## Was es kann
 
@@ -30,12 +33,23 @@ druckfertiges Vektor-PDF. Es läuft unter Windows, macOS und Linux, auf Intel- u
 - Etikettenliste: hinzufügen, duplizieren, löschen, umsortieren, eine eingefügte Liste importieren.
   Formate: `Interpret - Titel A / Titel B`, `Interpret; Titel A; Titel B` und, mit einem Interpreten pro Seite,
   `Interpret A - Titel A | Interpret B - Titel B` oder `Interpret A; Titel A; Titel B; Interpret B`.
-- PDF auf A4- oder Letter-Blättern (auf A4 18 Etiketten pro Blatt, 4 mm Abstand, mit Schnittmarken
-  an den Ecken) oder ein Etikett pro Seite in 78 × 25 mm.
+- Papierformate, aus einem Ausklappmenü gewählt:
+
+  | Papier | Größe | Etiketten pro Blatt, Hochformat | Querformat |
+  |---|---|---|---|
+  | A3 | 297 × 420 mm | 39 | 36 |
+  | A4 | 210 × 297 mm | 18 | 18 |
+  | A5 | 148 × 210 mm | 6 | 8 |
+  | A6 | 105 × 148 mm | 4 | 3 |
+  | Letter | 216 × 279 mm | 18 | 18 |
+  | Ein Etikett pro Seite | 78 × 25 mm | 1 | 1 |
+
+  Jedes Blatt lässt sich im Hoch- oder Querformat verwenden.
+  Auf den Blättern haben die Etiketten 4 mm Abstand, mit Schnittmarken an den Ecken.
   Abstand, grauer Rand und Anzahl der Kopien je Etikett sind einstellbar.
 - Die Blattvorschau blättert durch die Seiten, wenn es mehr als eine gibt.
-- Oberfläche in Dunkelgrau/Schwarz oder im Tagmodus; Sprachen: Italienisch, Englisch, Deutsch,
-  Französisch, Chinesisch, Japanisch.
+- Oberfläche in Dunkelgrau/Schwarz oder im Tagmodus; Sprachen: Italienisch, Englisch, Spanisch,
+  Deutsch, Französisch, Chinesisch, Japanisch.
 - **Neues Projekt** löscht alle Etiketten auf einmal (nach einer Rückfrage).
 - Projekte speichern und öffnen; die Arbeit bleibt auch nach dem Schließen erhalten. Ein Projekt
   speichert den Speicherort des Bildes, nicht das Bild selbst: wird die Datei verschoben, neu wählen.
@@ -58,6 +72,8 @@ Für die anderen Plattformen und Prozessoren (Intel und ARM):
 System. Die Datei `.github/workflows/build.yml` baut alle sechs Versionen auf GitHub.
 Unter Linux werden die Bibliotheken `libgtk-3`, `libxkbcommon` und `libwayland` benötigt.
 
+Die oben links angezeigte Version ist die aus `Cargo.toml`.
+
 ## Symbol
 
 Das Symbol (eine Vinylplatte hinter einem Jukebox-Etikett) ist in `src/icon.rs` gezeichnet;
@@ -76,7 +92,7 @@ die Dateien liegen in `assets/icon`: `icon.ico` (Windows), `icon.icns` (macOS) u
 - `--export-pdf datei.pdf` erstellt ohne Fenster ein PDF mit den Beispiel-Etiketten.
 - `--gallery datei.png` speichert ein Bild mit allen Designs.
 - `--make-icons ordner` erzeugt die Symboldateien neu.
-- `--lang it|en|de|fr|zh|ja`, `--day` und `--image foto.jpg`, um beim Start eine Sprache,
+- `--lang it|en|es|de|fr|zh|ja`, `--day` und `--image foto.jpg`, um beim Start eine Sprache,
   den Tagmodus und das Foto-Design auszuprobieren.
 
 ## Schriften

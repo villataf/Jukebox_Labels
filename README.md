@@ -1,6 +1,8 @@
 # Etichette Jukebox
 
-**Italiano** · [English](README.en.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [中文](README.zh.md) · [日本語](README.ja.md)
+**Italiano** · [English](README.en.md) · [Español](README.es.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [中文](README.zh.md) · [日本語](README.ja.md)
+
+Versione 0.6.1 · Federico Villata - 2026
 
 Programma per creare le etichette (title strip) dei dischi di un juke-box, alla misura esatta
 di **78 × 25 mm**, con grafiche, colori e caratteri in stile anni 70, 80 e 90. Esporta un PDF
@@ -11,7 +13,8 @@ vettoriale pronto da stampare. Funziona su Windows, macOS e Linux, con processor
 1. Scrivi **artista** e **titoli** nei box (lato A e, se vuoi, lato B).
 2. Scegli una **grafica**, i **colori** e il **carattere**: l'anteprima si aggiorna subito.
 3. Aggiungi altre etichette con **➕ Nuova**, oppure incolla un elenco con **Importa elenco…**.
-4. Premi **Esporta PDF…** e stampa il file al 100% ("dimensioni effettive"), senza adattarlo alla pagina.
+4. Scegli il **formato del foglio** dal menu a tendina nel pannello **Stampa PDF** e se usarlo in **verticale** o in **orizzontale**.
+5. Premi **Esporta PDF…** e stampa il file al 100% ("dimensioni effettive"), senza adattarlo alla pagina.
 
 ## Cosa fa
 
@@ -31,12 +34,23 @@ vettoriale pronto da stampare. Funziona su Windows, macOS e Linux, con processor
 - Elenco di etichette: aggiungi, duplica, elimina, riordina, importa un elenco incollato.
   Formati: `Artista - Titolo A / Titolo B`, `Artista; Titolo A; Titolo B` e, con un artista per lato,
   `Artista A - Titolo A | Artista B - Titolo B` oppure `Artista A; Titolo A; Titolo B; Artista B`.
-- PDF su foglio A4 o Letter (sull'A4 18 etichette per foglio, distanziate di 4 mm, con gli
-  indicatori di ritaglio agli angoli) oppure una etichetta per pagina a 78 × 25 mm.
+- Formati del foglio, scelti da un menu a tendina:
+
+  | Foglio | Misure | Etichette per foglio in verticale | in orizzontale |
+  |---|---|---|---|
+  | A3 | 297 × 420 mm | 39 | 36 |
+  | A4 | 210 × 297 mm | 18 | 18 |
+  | A5 | 148 × 210 mm | 6 | 8 |
+  | A6 | 105 × 148 mm | 4 | 3 |
+  | Letter | 216 × 279 mm | 18 | 18 |
+  | Una etichetta per pagina | 78 × 25 mm | 1 | 1 |
+
+  Ogni foglio si può usare in verticale o in orizzontale.
+  Sui fogli le etichette sono distanziate di 4 mm, con gli indicatori di ritaglio agli angoli.
   Lo spazio tra le etichette, il contorno grigio e le copie di ogni etichetta si possono cambiare.
 - L'anteprima del foglio scorre tra le pagine quando ce n'è più di una.
-- Interfaccia grigio scuro/nero oppure modalità giorno; lingue: italiano, inglese, tedesco,
-  francese, cinese, giapponese.
+- Interfaccia grigio scuro/nero oppure modalità giorno; lingue: italiano, inglese, spagnolo,
+  tedesco, francese, cinese, giapponese.
 - **Nuovo progetto** elimina in un colpo tutte le etichette (dopo una conferma).
 - Salva e apri i progetti; il lavoro viene anche ricordato alla chiusura. Il progetto salva il
   percorso dell'immagine, non l'immagine: se il file viene spostato va scelto di nuovo.
@@ -59,6 +73,8 @@ Per le altre piattaforme e processori (Intel e ARM):
 corrispondente. Il file `.github/workflows/build.yml` compila tutte e sei le versioni su GitHub.
 Su Linux servono le librerie `libgtk-3`, `libxkbcommon` e `libwayland`.
 
+La versione mostrata in alto a sinistra è quella scritta in `Cargo.toml`.
+
 ## Icona
 
 L'icona (un disco in vinile dietro un'etichetta da juke-box) è disegnata in `src/icon.rs`;
@@ -77,7 +93,7 @@ i file sono in `assets/icon`: `icon.ico` (Windows), `icon.icns` (macOS) e PNG da
 - `--export-pdf file.pdf` crea un PDF con le etichette di esempio, senza finestra.
 - `--gallery file.png` salva un'immagine con tutte le grafiche.
 - `--make-icons cartella` rigenera i file dell'icona.
-- `--lang it|en|de|fr|zh|ja`, `--day` e `--image foto.jpg` per provare lingua, modalità giorno
+- `--lang it|en|es|de|fr|zh|ja`, `--day` e `--image foto.jpg` per provare lingua, modalità giorno
   e grafica con la foto all'avvio.
 
 ## Caratteri

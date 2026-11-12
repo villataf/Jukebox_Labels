@@ -1,6 +1,8 @@
 # Jukebox Labels
 
-[Italiano](README.md) · **English** · [Deutsch](README.de.md) · [Français](README.fr.md) · [中文](README.zh.md) · [日本語](README.ja.md)
+[Italiano](README.md) · **English** · [Español](README.es.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [中文](README.zh.md) · [日本語](README.ja.md)
+
+Version 0.6.1 · Federico Villata - 2026
 
 A program for making the title strips of a jukebox's records, at the exact size of
 **78 × 25 mm**, with designs, colours and fonts in the style of the 70s, 80s and 90s. It exports a
@@ -11,7 +13,8 @@ vector PDF ready to print. It runs on Windows, macOS and Linux, on Intel and ARM
 1. Type the **artist** and the **titles** in the boxes (side A and, if you like, side B).
 2. Choose a **design**, the **colours** and the **font**: the preview updates straight away.
 3. Add more labels with **➕ New**, or paste a list with **Import list…**.
-4. Press **Export PDF…** and print the file at 100% ("actual size"), without fitting it to the page.
+4. Choose the **paper size** from the drop-down menu in the **Print PDF** panel and whether to use it in **portrait** or **landscape**.
+5. Press **Export PDF…** and print the file at 100% ("actual size"), without fitting it to the page.
 
 ## What it does
 
@@ -30,11 +33,22 @@ vector PDF ready to print. It runs on Windows, macOS and Linux, on Intel and ARM
 - List of labels: add, duplicate, delete, reorder, import a pasted list.
   Formats: `Artist - Title A / Title B`, `Artist; Title A; Title B` and, with one artist per side,
   `Artist A - Title A | Artist B - Title B` or `Artist A; Title A; Title B; Artist B`.
-- PDF on A4 or Letter sheets (on A4, 18 labels per sheet, 4 mm apart, with crop marks at the
-  corners) or one label per page at 78 × 25 mm.
+- Paper sizes, chosen from a drop-down menu:
+
+  | Paper | Size | Labels per sheet, portrait | landscape |
+  |---|---|---|---|
+  | A3 | 297 × 420 mm | 39 | 36 |
+  | A4 | 210 × 297 mm | 18 | 18 |
+  | A5 | 148 × 210 mm | 6 | 8 |
+  | A6 | 105 × 148 mm | 4 | 3 |
+  | Letter | 216 × 279 mm | 18 | 18 |
+  | One label per page | 78 × 25 mm | 1 | 1 |
+
+  Every sheet can be used in portrait or landscape.
+  On sheets the labels are 4 mm apart, with crop marks at the corners.
   The space between labels, the grey outline and the copies of each label can be changed.
 - The sheet preview pages through the sheets when there is more than one.
-- Dark grey/black interface or day mode; languages: Italian, English, German, French,
+- Dark grey/black interface or day mode; languages: Italian, English, Spanish, German, French,
   Chinese, Japanese.
 - **New project** deletes all labels in one go (after asking).
 - Save and open projects; your work is also remembered when you close the program. A project
@@ -58,6 +72,8 @@ For the other platforms and processors (Intel and ARM):
 system. The file `.github/workflows/build.yml` builds all six versions on GitHub.
 Linux needs the `libgtk-3`, `libxkbcommon` and `libwayland` libraries.
 
+The version shown at the top left is the one in `Cargo.toml`.
+
 ## Icon
 
 The icon (a vinyl record behind a jukebox label) is drawn in `src/icon.rs`;
@@ -76,7 +92,7 @@ the files are in `assets/icon`: `icon.ico` (Windows), `icon.icns` (macOS) and PN
 - `--export-pdf file.pdf` creates a PDF with the sample labels, without a window.
 - `--gallery file.png` saves a picture with all the designs.
 - `--make-icons folder` regenerates the icon files.
-- `--lang it|en|de|fr|zh|ja`, `--day` and `--image photo.jpg` to try a language, day mode
+- `--lang it|en|es|de|fr|zh|ja`, `--day` and `--image photo.jpg` to try a language, day mode
   and the photo design at start-up.
 
 ## Fonts
